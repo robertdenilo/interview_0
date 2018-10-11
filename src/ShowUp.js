@@ -17,11 +17,7 @@ class ShowUp extends Component {
     }
 
     render() {      
-        var data;
-        if(!isNaN(ReviewedUser  ) && ReviewedUser.length>0){
-            data = ReviewedUser.filter((user)=>user.like===true);
-        }
-        
+  
         return(<div >            
             <div style={{display: 'flex', justifyContent: 'center',alignItems: 'center'}}>
             <div style={{ width:700,  boxShadow: 'darkgrey 0px 0px 30px 5px inset'}} >
@@ -69,7 +65,7 @@ class User extends Component {
       
       var userinfo = {name:"",location:""};
       if(this.props.userinfo !== undefined){
-        var userinfo = this.props.userinfo;
+        userinfo = this.props.userinfo;
       }
 
       return (

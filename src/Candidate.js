@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 import { Button } from 'antd';
 import { Row, Col } from 'antd';
 import { Avatar } from 'antd';
-import { Skeleton, Switch, Card, Icon } from 'antd';
+import { Switch, Card } from 'antd';
 const { Meta } = Card;
 
 class Candidate extends Component {
@@ -138,9 +138,6 @@ class Candidate extends Component {
 }
 class User extends Component {
     
-    constructor(){
-      super();
-    }
     render () {
       var like = this.props.like;
       var user = {name: 'N/A',
