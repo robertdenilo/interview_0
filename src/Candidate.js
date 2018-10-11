@@ -8,29 +8,29 @@ import { Avatar } from 'antd';
 import { Skeleton, Switch, Card, Icon } from 'antd';
 const { Meta } = Card;
 
-var ReviewedUser = [];
-var backToMain;
 class Candidate extends Component {
+    backToMain;
+    ReviewedUser = [];
     constructor(props){
       super(props);
 
       console.log(this.props.location);
       if(this.props.location.state!==undefined){
          if(this.props.location.state!==undefined ){
-            backToMain = this.props.location.state.backToMain;
+            this.backToMain = this.props.location.state.backToMain;
          }
       
          
          if(this.props.location.state.userinfo.length === 0 ){
             this.state={index:0};
             //get 1st user initially
-            ReviewedUser.push({index:0,like:false});
+            this.ReviewedUser.push({index:0,like:false});
             this.getUser(0);
   
-            backToMain(ReviewedUser);
+            this.backToMain(this.ReviewedUser);
          }else{
-            ReviewedUser = this.props.location.state.userinfo;
-            this.state={index:0, userinfo:ReviewedUser[0].userinfo,like:ReviewedUser[0].like};
+            this.ReviewedUser = this.props.location.state.userinfo;
+            this.state={index:0, userinfo:this.ReviewedUser[0].userinfo,like:this.ReviewedUser[0].like};
          }
 
 
@@ -47,8 +47,8 @@ class Candidate extends Component {
           var userinfo = {name: result.results[0].name.first + " " + result.results[0].name.last,
           location: result.results[0].location.street + "" + result.results[0].location.city + " " + result.results[0].location.state,
           avatar:result.results[0].picture.thumbnail}
-          var temp = ReviewedUser[index];
-          ReviewedUser[index]={index: temp.index, like: temp.like, userinfo: userinfo};
+          var temp = this.ReviewedUser[index];
+          this.ReviewedUser[index]={index: temp.index, like: temp.like, userinfo: userinfo};
           this.setState({userinfo:userinfo, like: temp.like});
         },
         (error) => {}
@@ -60,20 +60,18 @@ class Candidate extends Component {
         var index = this.state.index;
         index++;
         console.log(this.state);
-        // if(++index >= ReviewedUser.length){
-        //   index = index % ReviewedUser.length;
-        // }
+
         var key = this.existInArray(index);
         if (isNaN(key)){
           var userallinfo = {index:index,
             like:false}
-          ReviewedUser.push(userallinfo);
+          this.ReviewedUser.push(userallinfo);
           this.setState({index:index});
           this.getUser(index);
         } else{
           this.setState({index:index,
-            userinfo:ReviewedUser[key].userinfo, 
-            like: ReviewedUser[key].like});
+            userinfo:this.ReviewedUser[key].userinfo, 
+            like: this.ReviewedUser[key].like});
         }
         //console.log(ReviewedUser);
 
@@ -82,44 +80,44 @@ class Candidate extends Component {
       if (this.state.index > 0 ){
         var preindex = this.state.index - 1;
         this.setState({index:preindex,
-              like:ReviewedUser[preindex].like,
-              userinfo:ReviewedUser[preindex].userinfo});
+              like:this.ReviewedUser[preindex].like,
+              userinfo:this.ReviewedUser[preindex].userinfo});
       }
       //console.log(ReviewedUser);
     }
 
     //check whether exist in ReviewedUser
     existInArray(index){
-      for(var key in ReviewedUser){
-        if(ReviewedUser[key].index === index){
+      for(var key in this.ReviewedUser){
+        if(this.ReviewedUser[key].index === index){
              return key;
         }
       }
       return NaN;
     }
-    onClickLike(event){
-      console.log("btn");
-      var key = this.existInArray(this.state.index);
-      ReviewedUser[key] = {index: this.state.index,
-              like:!ReviewedUser[key].like,
-              userinfo:ReviewedUser[key].userinfo};
+    // onClickLike(event){
+    //   var key = this.existInArray(this.state.index);
+    //   this.ReviewedUser[key] = {index: this.state.index,
+    //           like:!this.ReviewedUser[key].like,
+    //           userinfo:this.ReviewedUser[key].userinfo};
   
-      this.setState({index:this.state.index,
-        userinfo:ReviewedUser[key].userinfo, 
-        like: ReviewedUser[key].like});
-
-    }
+    //   this.setState({index:this.state.index,
+    //     userinfo:this.ReviewedUser[key].userinfo, 
+    //     like: this.ReviewedUser[key].like});
+    // }
     onChange = (checked) => {
-      console.log("switch");
       var key = this.existInArray(this.state.index);
-      ReviewedUser[key] = {index: this.state.index,
-              like:!ReviewedUser[key].like,
-              userinfo:ReviewedUser[key].userinfo};
-  
-      this.setState({index:this.state.index,
-        userinfo:ReviewedUser[key].userinfo, 
-        like: ReviewedUser[key].like});
-      this.setState({ loading: ReviewedUser[key].like });
+      if(!isNaN(key)){
+        this.ReviewedUser[key] = {index: this.state.index,
+          like:!this.ReviewedUser[key].like,
+          userinfo:this.ReviewedUser[key].userinfo};
+
+        this.setState({index:this.state.index,
+          userinfo:this.ReviewedUser[key].userinfo, 
+          like: this.ReviewedUser[key].like});
+        this.setState({ loading: this.ReviewedUser[key].like });
+      }
+
     }
     componentWillUpdate(){
 
@@ -136,9 +134,9 @@ class Candidate extends Component {
 
     render () {    //<li><Redirect to={{pathname:"/showup",state:ReviewedUser}}/>Show</li>
          console.log("rendering...");
-         console.log(ReviewedUser);
-         if(backToMain){
-            backToMain(ReviewedUser);
+         console.log(this.ReviewedUser);
+         if(this.backToMain){
+            this.backToMain(this.ReviewedUser);
          }
 
         return (
@@ -157,12 +155,18 @@ class Candidate extends Component {
               <p>You may found your interest: </p>
               <User ref="user1" index={this.state.index} userinfo={this.state.userinfo} like={this.state.like}/>
               
-              <Row gutter={10}>
+              <Row gutter={80}>
                 <Col span={8}><Button type="primary" onClick={this.onClickPrevious.bind(this)}>Previous</Button></Col>
-                <Col span={8}><Button type="primary" onClick={this.onClickLike.bind(this)}>Like</Button></Col>
+                <Col span={8}>
+                     {/* <Button type="primary" onClick={this.onClickLike.bind(this)}>Like</Button> */}
+                     <div style={{float:"left", fontSize:20, width:80, height:80}}>
+                     <div><p>Like?</p></div>
+                     <div><Switch checked={this.state.like} onChange={this.onChange}/></div>
+                     </div>
+                </Col>
                 <Col span={8}><Button type="primary" onClick={this.onClickNext.bind(this)}>Next</Button></Col>
               </Row>
-             <Switch checked={this.state.like} onChange={this.onChange} /> 
+             
               </div>
  
             </div>
