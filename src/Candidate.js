@@ -8,31 +8,20 @@ import { Avatar } from 'antd';
 import { Skeleton, Switch, Card, Icon } from 'antd';
 const { Meta } = Card;
 
-//mockup data
-const users = [
-    { name: 'Jerry', age: 11, gender: 'male' },
-    { name: 'Tomy', age: 22, gender: 'male' },
-    { name: 'Lily', age: 19, gender: 'female' },
-    { name: 'Lucy', age: 20, gender: 'female' },
-    { name: 'Jack', age: 33, gender: 'female' },
-    { name: 'Jack1', age: 44, gender: 'female' },
-    { name: 'Jack2', age: 55, gender: 'female' },
-    { name: 'Jack3', age: 66, gender: 'female' },
-    { name: 'Jack4', age: 77, gender: 'female' }
-  ]
-
 var ReviewedUser = [];
 var backToMain;
 class Candidate extends Component {
     constructor(props){
       super(props);
 
-         if(this.props.location.state!==undefined){
+      console.log(this.props.location);
+      if(this.props.location.state!==undefined){
+         if(this.props.location.state!==undefined ){
             backToMain = this.props.location.state.backToMain;
          }
       
          
-         if(this.props.location.state.userinfo.length===0){
+         if(this.props.location.state.userinfo.length === 0 ){
             this.state={index:0};
             //get 1st user initially
             ReviewedUser.push({index:0,like:false});
@@ -44,6 +33,10 @@ class Candidate extends Component {
             this.state={index:0, userinfo:ReviewedUser[0].userinfo,like:ReviewedUser[0].like};
          }
 
+
+      }else{
+         this.state={index:0, userinfo:"",like:false};
+       }
     }
     
     getUser(index){
@@ -82,7 +75,7 @@ class Candidate extends Component {
             userinfo:ReviewedUser[key].userinfo, 
             like: ReviewedUser[key].like});
         }
-        console.log(ReviewedUser);
+        //console.log(ReviewedUser);
 
     }
     onClickPrevious(){
@@ -92,7 +85,7 @@ class Candidate extends Component {
               like:ReviewedUser[preindex].like,
               userinfo:ReviewedUser[preindex].userinfo});
       }
-      console.log(ReviewedUser);
+      //console.log(ReviewedUser);
     }
 
     //check whether exist in ReviewedUser
@@ -105,8 +98,8 @@ class Candidate extends Component {
       return NaN;
     }
     onClickLike(event){
+      console.log("btn");
       var key = this.existInArray(this.state.index);
-
       ReviewedUser[key] = {index: this.state.index,
               like:!ReviewedUser[key].like,
               userinfo:ReviewedUser[key].userinfo};
@@ -115,25 +108,39 @@ class Candidate extends Component {
         userinfo:ReviewedUser[key].userinfo, 
         like: ReviewedUser[key].like});
 
-      console.log(ReviewedUser);
+    }
+    onChange = (checked) => {
+      console.log("switch");
+      var key = this.existInArray(this.state.index);
+      ReviewedUser[key] = {index: this.state.index,
+              like:!ReviewedUser[key].like,
+              userinfo:ReviewedUser[key].userinfo};
+  
+      this.setState({index:this.state.index,
+        userinfo:ReviewedUser[key].userinfo, 
+        like: ReviewedUser[key].like});
+      this.setState({ loading: ReviewedUser[key].like });
     }
     componentWillUpdate(){
 
     }
     componentWillReceiveProps(nextProps) {  
-      console.log("AAA");
-      console.log(nextProps);
-      //console.log(this.props);
-      //ReviewedUser = nextProps.location.state.userinfo;
-      console.log(ReviewedUser);
-      console.log("BBB");
+      // console.log("AAA");
+      // console.log(nextProps);
+      // //console.log(this.props);
+      // //ReviewedUser = nextProps.location.state.userinfo;
+      // console.log(ReviewedUser);
+      // console.log("BBB");
 
     }
 
     render () {    //<li><Redirect to={{pathname:"/showup",state:ReviewedUser}}/>Show</li>
          console.log("rendering...");
          console.log(ReviewedUser);
-         backToMain(ReviewedUser);
+         if(backToMain){
+            backToMain(ReviewedUser);
+         }
+
         return (
             <div style={{fontSize:40,textAlign:'center'}}>
               
@@ -150,11 +157,12 @@ class Candidate extends Component {
               <p>You may found your interest: </p>
               <User ref="user1" index={this.state.index} userinfo={this.state.userinfo} like={this.state.like}/>
               
-              <Row gutter={16}>
-                <Col span={6}><Button type="primary" onClick={this.onClickPrevious.bind(this)}>Previous</Button></Col>
-                <Col span={6}><Button type="primary" onClick={this.onClickLike.bind(this)}>Like</Button></Col>
-                <Col span={6}><Button type="primary" onClick={this.onClickNext.bind(this)}>Next</Button></Col>
+              <Row gutter={10}>
+                <Col span={8}><Button type="primary" onClick={this.onClickPrevious.bind(this)}>Previous</Button></Col>
+                <Col span={8}><Button type="primary" onClick={this.onClickLike.bind(this)}>Like</Button></Col>
+                <Col span={8}><Button type="primary" onClick={this.onClickNext.bind(this)}>Next</Button></Col>
               </Row>
+             <Switch checked={this.state.like} onChange={this.onChange} /> 
               </div>
  
             </div>
@@ -172,7 +180,6 @@ class User extends Component {
     }
     componentWillUnmount() {
     }
-  
     render () {
       var like = this.props.like;
       var user = {name: 'N/A',

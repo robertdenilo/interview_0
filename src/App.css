@@ -18,6 +18,11 @@
   color: white;
 }
 
+.p1 {
+  backgroundColor:#0000FF;
+  fond: size 50;
+}
+
 .App-link {
   color: #61dafb;
 }

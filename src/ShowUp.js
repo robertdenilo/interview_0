@@ -8,10 +8,14 @@ class ShowUp extends Component {
 
     constructor(props,context){
         super(props,context);
-        ReviewedUser = this.props.location.state.userinfo;
-        backToMain = this.props.location.state.backToMain;
-         console.log("show up....");
-         console.log(ReviewedUser);
+        console.log("show up....");
+        console.log(this.props.location);
+        if(this.props.location.state!== undefined){
+            ReviewedUser = this.props.location.state.userinfo;
+            backToMain = this.props.location.state.backToMain;
+        }
+
+
     }
     // goback(){
     //     var path = {
@@ -31,9 +35,9 @@ class ShowUp extends Component {
         
         return(<div >
             
-         {ReviewedUser.filter((user)=>user.like===true).map((user, key) => 
+         {/* {ReviewedUser.filter((user)=>user.like===true).map((user, key) => 
             <User key={key}  index={user.index} userinfo={user.userinfo} like={user.like}/>
-        )}  
+        )}   */}
         <div style={{display: 'flex', justifyContent: 'center',alignItems: 'center'}}>
         <div style={{ width:700,  boxShadow: 'darkgrey 0px 0px 30px 5px inset'}} >
             <div style={{fontSize: 30, testAllign:'center'}}>
@@ -62,13 +66,20 @@ class ShowUp extends Component {
     }
 }
 class User extends Component {
+    
+    constructor(){
+        super();
+        this.state={color:"#00FF00"};
+    }
     onNotLike(){
         ReviewedUser[this.props.index] = {
             index:this.props.index,
             like:false,
             userinfo:this.props.userinfo
         }
+        this.setState({color:'#FF0000'});
         backToMain(ReviewedUser);
+        
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps !== this.props){
@@ -84,7 +95,7 @@ class User extends Component {
       }
 
       return (
-        <div>
+        <div style={{backgroundColor:this.state.color}}>
           {/* <div><Avatar size={64} icon="user" src={userinfo.avatar}/></div>   */}
           <div>Name：{userinfo.name}</div>
           <div>Address：{userinfo.location}</div>
