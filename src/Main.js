@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link,withRouter} from 'react-router-dom'   
+import { withRouter} from 'react-router-dom'   
 
 import { Layout, Menu, Icon} from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -14,16 +14,17 @@ class Main extends Component {
     });
   }
 
-
-
   constructor(){
     super();
     this.state={userinfo:[], collapsed: false,};
   }
 
+  //call back to receive update
   getResultFromPage(value){
     this.ReviewedUser = value;
   }
+  
+  //pass Post data with url
   onClickTo(arg){
     var path = {
         pathname:arg,

@@ -1,6 +1,6 @@
 import  React,{ Component } from 'react';
-import { HashRouter as Router, Route, Link,withRouter } from 'react-router-dom'   //BrowserRouter 
-import ShowUp from './ShowUp'
+import { withRouter } from 'react-router-dom'   
+
 import 'antd/dist/antd.css';
 import { Button } from 'antd';
 import { Row, Col } from 'antd';
@@ -14,13 +14,11 @@ class Candidate extends Component {
     constructor(props){
       super(props);
 
-      console.log(this.props.location);
       if(this.props.location.state!==undefined){
          if(this.props.location.state!==undefined ){
             this.backToMain = this.props.location.state.backToMain;
          }
-      
-         
+
          if(this.props.location.state.userinfo.length === 0 ){
             this.state={index:0};
             //get 1st user initially
@@ -38,7 +36,7 @@ class Candidate extends Component {
          this.state={index:0, userinfo:"",like:false};
        }
     }
-    
+    //call to api
     getUser(index){
       fetch("https://randomuser.me/api/")
       .then(res => res.json())
@@ -52,14 +50,14 @@ class Candidate extends Component {
           this.setState({userinfo:userinfo, like: temp.like});
         },
         (error) => {}
-      
+              //need process error furthurmore when testing
         )
         
     }
+    //get next page user info
     onClickNext(event){
         var index = this.state.index;
         index++;
-        console.log(this.state);
 
         var key = this.existInArray(index);
         if (isNaN(key)){
@@ -73,9 +71,8 @@ class Candidate extends Component {
             userinfo:this.ReviewedUser[key].userinfo, 
             like: this.ReviewedUser[key].like});
         }
-        //console.log(ReviewedUser);
-
     }
+    //render previous user info
     onClickPrevious(){
       if (this.state.index > 0 ){
         var preindex = this.state.index - 1;
@@ -83,7 +80,6 @@ class Candidate extends Component {
               like:this.ReviewedUser[preindex].like,
               userinfo:this.ReviewedUser[preindex].userinfo});
       }
-      //console.log(ReviewedUser);
     }
 
     //check whether exist in ReviewedUser
@@ -95,16 +91,6 @@ class Candidate extends Component {
       }
       return NaN;
     }
-    // onClickLike(event){
-    //   var key = this.existInArray(this.state.index);
-    //   this.ReviewedUser[key] = {index: this.state.index,
-    //           like:!this.ReviewedUser[key].like,
-    //           userinfo:this.ReviewedUser[key].userinfo};
-  
-    //   this.setState({index:this.state.index,
-    //     userinfo:this.ReviewedUser[key].userinfo, 
-    //     like: this.ReviewedUser[key].like});
-    // }
     onChange = (checked) => {
       var key = this.existInArray(this.state.index);
       if(!isNaN(key)){
@@ -119,38 +105,14 @@ class Candidate extends Component {
       }
 
     }
-    componentWillUpdate(){
 
-    }
-    componentWillReceiveProps(nextProps) {  
-      // console.log("AAA");
-      // console.log(nextProps);
-      // //console.log(this.props);
-      // //ReviewedUser = nextProps.location.state.userinfo;
-      // console.log(ReviewedUser);
-      // console.log("BBB");
-
-    }
-
-    render () {    //<li><Redirect to={{pathname:"/showup",state:ReviewedUser}}/>Show</li>
-         console.log("rendering...");
-         console.log(this.ReviewedUser);
+    render () {    
          if(this.backToMain){
             this.backToMain(this.ReviewedUser);
          }
-
         return (
             <div style={{fontSize:40,textAlign:'center'}}>
               
-              {/* <Router>
-                <div>
-                  <Route exact={true} path="/Showup" component={ShowUp}/> 
-                  <ul>
-                      <li><Link to={{pathname:"/Showup",state:ReviewedUser}}>Show Likes</Link></li>
-                  </ul>
-                </div>
-              </Router> */}
-
               <div>
               <p>You may found your interest: </p>
               <User ref="user1" index={this.state.index} userinfo={this.state.userinfo} like={this.state.like}/>
@@ -158,7 +120,6 @@ class Candidate extends Component {
               <Row gutter={80}>
                 <Col span={8}><Button type="primary" onClick={this.onClickPrevious.bind(this)}>Previous</Button></Col>
                 <Col span={8}>
-                     {/* <Button type="primary" onClick={this.onClickLike.bind(this)}>Like</Button> */}
                      <div style={{float:"left", fontSize:20, width:80, height:80}}>
                      <div><p>Like?</p></div>
                      <div><Switch checked={this.state.like} onChange={this.onChange}/></div>
@@ -179,10 +140,6 @@ class User extends Component {
     
     constructor(){
       super();
-    }
-    componentDidMount() {
-    }
-    componentWillUnmount() {
     }
     render () {
       var like = this.props.like;

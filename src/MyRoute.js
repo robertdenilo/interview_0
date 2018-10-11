@@ -8,6 +8,7 @@ import { Route,Switch,Redirect } from 'react-router-dom'
 export default class MyRoute extends Component {
     render(){
         return(
+          //define page route mapping
           <Main>
             <Switch>
               <Route exact path="/Candidate" component={Candidate}/>

@@ -3,7 +3,7 @@ import './App.css';
 import Candidate from './Candidate';
 import ShowUp from './ShowUp';
 
-import { HashRouter as Router, Route, Link,withRouter,Redirect, Switch} from 'react-router-dom'   
+import {  Route,withRouter,Redirect, Switch} from 'react-router-dom'   
 
 import { Layout, Menu, Icon } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -26,12 +26,10 @@ class App extends Component {
   componentDidMount () {
 
   }
-  // onClick(event){
-  //     console.log(ReviewedUser);
-  // }
+
   getResultFromPage(value){
     console.log("back to main");
-    // console.log(value);
+
     this.ReviewedUser = value;
   }
   onClickTo(arg){
@@ -43,19 +41,6 @@ class App extends Component {
     this.props.history.push(path);
   }
   render() {
-    // var item1 =  <div>
-    //     <Router>
-    //       <div>        
-    //         <ul>
-    //             <li><Link to = {{pathname:"/Candidate",state:{backToMain:this.getResultFromPage,userinfo:ReviewedUser}}}>Search People</Link></li>
-    //             <li><Link to = {{pathname:"/ShowUp",state:{backToMain:this.getResultFromPage,userinfo:ReviewedUser}}}>Show Favorite</Link></li>
-    //         </ul>
-    //         <Route exact={true} path="/Candidate" component={Candidate}/>
-    //         <Route exact={true} path="/ShowUp" component={ShowUp}/>
-    //       </div>
-    //     </Router>
-    //       {/* <button onClick={this.onClick.bind(this)}>check</button> */}
-    //     </div>;
     var item2 =  <div>
       <Layout>
         <Sider
@@ -65,16 +50,6 @@ class App extends Component {
         >
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            {/* <Menu.Item key="1">
-              <Icon type="user" />
-              <span>Search People</span>
-              <Link to = {{pathname:"/Candidate",state:{backToMain:this.getResultFromPage.bind(this),userinfo:this.ReviewedUser}}} replace>Search People</Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="2">
-              <Icon type="user" />
-              <span>Show Favorite</span>
-              <Link to = {{pathname:"/ShowUp",state:{backToMain:this.getResultFromPage.bind(this),userinfo:this.ReviewedUser}}} replace>Show Favorite</Link>
-              </Menu.Item> */}
             <Menu.Item key="1">
               <Icon type="user" />
               <span onClick={this.onClickTo.bind(this,"/Candidate")}>Search People</span>
